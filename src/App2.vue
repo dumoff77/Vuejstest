@@ -7,24 +7,15 @@
             :visible.sync="dialogVisible"
             width="30%"
             :before-close="handleClose">
-        <div>
-            <div class="demo-input-label">
-                <span>Login: </span>
-            </div>
-            <div class="demo-input-label">
-                <el-input placeholder="login" v-model="login"></el-input>
-            </div>
-        </div>
 
-
-        <div>
-            <div class="demo-input-label">
-                <span>Pass: </span>
-            </div>
-            <div class="demo-input-label">
-                <el-input placeholder="password" v-model="pass"></el-input>
-            </div>
-        </div>
+        <el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="120px" class="demo-ruleForm">
+            <el-form-item label="Login" prop="login">
+                <el-input type="login" v-model="ruleForm.pass" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="Password" prop="pass">
+                <el-input type="password" v-model="ruleForm.login" autocomplete="off"></el-input>
+            </el-form-item>
+        </el-form>
 
         <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">Ок</el-button>
@@ -44,10 +35,13 @@
 <script>
     export default {
         data() {
+
             return {
                 dialogVisible: false,
-                login: '',
-                pass: ''
+                ruleForm: {
+                    pass: '',
+                    login: ''
+                },
             };
         },
         methods: {
