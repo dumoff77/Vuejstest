@@ -38,39 +38,43 @@
             </el-table-column>
         </el-table>
 
-        <div class="demo-form-inline">
+        <div class="demo-input-label">
             <el-row>
                 <el-input
                         size="medium"
                         placeholder="Please Input"
-                        v-model="input2">
+                        v-model="first_name">
                 </el-input>
                 <el-input
                         size="medium"
                         placeholder="Please Input"
-                        v-model="input3">
+                        v-model="tel_number">
                 </el-input>
                 <el-input
                         placeholder="Please Input"
-                        v-model="input4">
+                        v-model="desc">
                 </el-input>
-                <el-button @click="setCurrent()">Clear selection</el-button>
+                <el-button @click="SetHandbook">Save</el-button>
             </el-row>
-
-
         </div>
     </div>
 
 </template>
 
+<style>
+    .demo-input-label {
+        display: inline-block;
+        width: 130px;
+    }
+</style>
 
 <script>
     import axios from 'axios';
     export default {
         name: "table",
         methods: {
-            handleClick() {
-                console.log('handleClick');
+            SetHandbook() {
+                axios({ method: 'POST', url: '/api/handbook/', headers: {'Content-Type': 'application/json'}, data: { user: 'name' } })
             },
             deleteHandbook(mydata) {
                 axios.delete('/api/handbook/'+mydata);
@@ -79,6 +83,9 @@
         },
         data() {
             return {
+                first_name: '',
+                tel_number: '',
+                desc: '',
                 tableData: [{
                     number: '0980446512',
                     name: 'Valera',
