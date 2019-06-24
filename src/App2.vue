@@ -1,6 +1,7 @@
 <template>
     <div>
     <el-button type="text" @click="dialogVisible = true">click to open the Dialog</el-button>
+        <el-button type="primary" @click="HelloFunc">My Button</el-button>
 
     <el-dialog
             title=""
@@ -51,6 +52,9 @@
                         done();
                     })
                     .catch(_ => {});
+            },
+            HelloFunc() {
+                console.log('HelloWorld!');
             }
         }
     };
