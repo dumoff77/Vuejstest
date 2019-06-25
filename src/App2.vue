@@ -1,6 +1,6 @@
 <template>
     <div>
-    <el-button type="text" @click="dialogVisible = true">click to open the Dialog</el-button>
+    <el-button type="text" @click="InputDialogVisible = true">click to open the Dialog</el-button>
         <el-button type="primary" @click="HelloFunc">My Button</el-button>
 
     <el-dialog
@@ -19,8 +19,8 @@
         </el-form>
 
         <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">Ок</el-button>
-        <el-button type="primary" @click="dialogVisible = false">Отмена</el-button>
+        <el-button @click="InputDialogVisible = false">Ок</el-button>
+        <el-button type="primary" @click="InputDialogVisible = false">Отмена</el-button>
       </span>
     </el-dialog>
     </div>
@@ -38,8 +38,8 @@
         data() {
 
             return {
-                dialogVisible: false,
-                ruleForm: {
+                InputDialogVisible: false,
+                PostForm: {
                     pass: '',
                     login: ''
                 },
