@@ -114,6 +114,9 @@
                             description: this.PostForm.description
                         })
                     }
+                    else {
+                        alert('Can not update '+this.UpdateRecordOldName)
+                    }
                 })
             },
             SetHandbook() {
@@ -126,6 +129,9 @@
                             description: this.PostForm.description
                         })
                     }
+                    else {
+                        alert('Can not add '+this.PostForm.name)
+                    }
                 })
             },
             deleteHandbook() {
@@ -134,6 +140,9 @@
                     if (response.data == 'ok') {
                         //this.tableData = this.tableData.filter(el => el != this.DeleteRecordBuffer.row)
                         this.tableData.splice(this.tableData.indexOf(this.DeleteRecordBuffer.row),1)
+                    }
+                    else {
+                        alert('Can not delete '+this.DeleteRecordBuffer.row.name)
                     }
                 })
 
