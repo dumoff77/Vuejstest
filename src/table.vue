@@ -34,38 +34,35 @@
                 <template slot-scope="scope">
                     <el-button @click="DeleteRecordBuffer = scope, DeleteDialogVisible = true" type="text" size="small">Delete</el-button>
                     <el-button @click="InputDialogVisible = true,
-                    PostForm.name = scope.row.name,
-                    PostForm.number = scope.row.number,
-                    PostForm.description = scope.row.description" type="text" size="small">Edit</el-button>
+                    PostForm = scope.row, showButton = false" type="text" size="small">Edit</el-button>
                 </template>
             </el-table-column>
         </el-table>
 
         <el-button type="primary" @click="InputDialogVisible = true,
-        PostForm.name = PostForm.number = PostForm.description = ''">Add new record</el-button>
+        PostForm.name = PostForm.number = PostForm.description = '', showButton = true">Add new record</el-button>
         <el-dialog
                 title=""
                 :visible.sync="InputDialogVisible"
                 width="30%"
                 :before-close="handleClose">
             <el-form :model="PostForm" status-icon ref="ruleForm" label-width="120px" class="demo-ruleForm">
-                <el-form-item label="Имя" prop="first_name">
+                <el-form-item label="Имя" prop="name">
                     <el-input type="login" v-model="PostForm.name" autocomplete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="Телефон" prop="tel_number">
+                <el-form-item label="Телефон" prop="number">
                     <el-input type="tel_number" v-model="PostForm.number" autocomplete="off"></el-input>
                 </el-form-item>
-                <el-form-item label="Описание" prop="desc">
+                <el-form-item label="Описание" prop="description">
                     <el-input type="desc" v-model="PostForm.description" autocomplete="off"></el-input>
                 </el-form-item>
             </el-form>
 
             <span slot="footer" class="dialog-footer">
-                <el-button @click="InputDialogVisible = false,
-                UpdateHandbook()">Обновить</el-button>
-                <el-button :visible.sync="InputButtonVisible" @click="InputDialogVisible = false,
-                SetHandbook()">Сохранить</el-button>
-                <el-button type="primary" @click="InputDialogVisible = false">Отмена</el-button>
+                <!--Кнопка "Обновить" видна при нажатии "Edit", кнопка "Сохранить" видна при нажатии "Add new record"-->
+                <el-button v-show="!showButton" @click="InputDialogVisible = false, UpdateHandbook()">Обновить</el-button>
+                <el-button v-show="showButton" @click="InputDialogVisible = false, SetHandbook()">Сохранить</el-button>
+                <el-button  type="primary" @click="InputDialogVisible = false">Отмена</el-button>
             </span>
         </el-dialog>
 
@@ -89,7 +86,7 @@
         data() {
             return {
                 DeleteRecordBuffer: '',
-                InputButtonVisible: false,
+                showButton: false,
                 InputDialogVisible: false,
                 DeleteDialogVisible: false,
                 PostForm: {
@@ -97,33 +94,43 @@
                     number: '',
                     description: ''
                 },
-                tableData: [
-                    {
-                    number: '0980446512',
-                    name: 'Valera',
-                    description: 'best friend'
-                },
-                    {
-                    number: '0675487457',
-                    name: 'Vasya',
-                    description: 'classmate'
-                }
-                ]
+                tableData: []
             }
         },
         methods: {
             UpdateHandbook() {
-                axios.put('/api/handbook/'+this.PostForm.name ,this.PostForm);
-                this.tableData.pop(this.PostForm);
-                this.tableData.push(this.PostForm);
+                axios.put('/api/handbook/'+this.PostForm.name ,this.PostForm).then(response => {
+                    console.log(response)
+                    if (response.data == 'ok') {
+                        this.tableData = this.tableData.filter(el => el != this.PostForm)
+                        this.tableData.push({
+                            name: this.PostForm.name,
+                            number: this.PostForm.number,
+                            description: this.PostForm.description
+                        })
+                    }
+                })
             },
             SetHandbook() {
-                axios.post('/api/handbook',this.PostForm);
-                this.tableData.push(this.PostForm);
+                axios.post('/api/handbook',this.PostForm).then(response => {
+                    console.log(response)
+                    if (response.data == 'ok') {
+                        this.tableData.push({
+                            name: this.PostForm.name,
+                            number: this.PostForm.number,
+                            description: this.PostForm.description
+                        })
+                    }
+                })
             },
             deleteHandbook() {
-                axios.delete('/api/handbook/'+this.DeleteRecordBuffer.row.name);
-                this.tableData.pop(this.DeleteRecordBuffer.row);
+                axios.delete('/api/handbook/'+this.DeleteRecordBuffer.row.name).then(response => {
+                    console.log(response)
+                    if (response.data == 'ok') {
+                        this.tableData = this.tableData.filter(el => el != this.DeleteRecordBuffer.row)
+                    }
+                })
+
             },
             handleClose(done) {
                 this.$confirm('Are you sure to close this dialog?')
