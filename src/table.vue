@@ -34,7 +34,11 @@
                 <template slot-scope="scope">
                     <el-button @click="DeleteRecordBuffer = scope, DeleteDialogVisible = true" type="text" size="small">Delete</el-button>
                     <el-button @click="InputDialogVisible = true,
-                    PostForm = scope.row, showButton = false" type="text" size="small">Edit</el-button>
+                    PostForm.name = scope.row.name,
+                    PostForm.number = scope.row.number,
+                    PostForm.description = scope.row.description,
+                    UpdateRecordOldName = scope.row.name,
+                    showButton = false" type="text" size="small">Edit</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -85,6 +89,7 @@
         name: "table",
         data() {
             return {
+                UpdateRecordOldName: '',
                 DeleteRecordBuffer: '',
                 showButton: false,
                 InputDialogVisible: false,
@@ -99,10 +104,10 @@
         },
         methods: {
             UpdateHandbook() {
-                axios.put('/api/handbook/'+this.PostForm.name ,this.PostForm).then(response => {
+                axios.put('/api/handbook/'+this.UpdateRecordOldName ,this.PostForm).then(response => {
                     console.log(response)
                     if (response.data == 'ok') {
-                        this.tableData = this.tableData.filter(el => el != this.PostForm)
+                        this.tableData = this.tableData.filter(el => el.name != this.UpdateRecordOldName)
                         this.tableData.push({
                             name: this.PostForm.name,
                             number: this.PostForm.number,
@@ -127,7 +132,8 @@
                 axios.delete('/api/handbook/'+this.DeleteRecordBuffer.row.name).then(response => {
                     console.log(response)
                     if (response.data == 'ok') {
-                        this.tableData = this.tableData.filter(el => el != this.DeleteRecordBuffer.row)
+                        //this.tableData = this.tableData.filter(el => el != this.DeleteRecordBuffer.row)
+                        this.tableData.splice(this.tableData.indexOf(this.DeleteRecordBuffer.row),1)
                     }
                 })
 
